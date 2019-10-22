@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import { getItems, deleteItem } from '../actions/itemActions';
 import PropTypes from 'prop-types';
 
-
 class ShoppingList extends Component{    
 
     componentDidMount(){
@@ -18,14 +17,14 @@ class ShoppingList extends Component{
             <Container>
                 <ListGroup>
                     <TransitionGroup className="shoppong-list">
-                        {items.map(({id, name}) => {
-                           return <CSSTransition  key={id} timeout={500} classNames="fade">
+                        {items.map(({_id, name}) => {                           
+                           return <CSSTransition  key={_id} timeout={500} classNames="fade">
                               <ListGroupItem>
                               <Button
                                  color="danger"
                                  size="sm"
                                  className="mr-2"
-                                 onClick = {() => this.props.deleteItem(id)}                                                                     
+                                 onClick = {() => this.props.deleteItem(_id)}                                                                     
                               >
                                  &times;
                               </Button>   
