@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const config = require('config');
 const path = require('path');
 const items = require('./routes/api/items');
 
@@ -10,7 +11,9 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 
 //Connect to the DB
-const dbUri = require('./config/keys').dbUri;
+
+const dbUri = config.get('dbUri');
+
 
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => console.log('Database connected ...'))
