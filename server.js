@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require('config');
 const path = require('path');
 const items = require('./routes/api/items');
+const users = require('./routes/api/users');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,12 +16,18 @@ app.use(express.json());
 const dbUri = config.get('dbUri');
 
 
-mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(dbUri,
+         { 
+           useNewUrlParser: true,
+           useUnifiedTopology: true,
+           useCreateIndex: true
+         })
         .then(() => console.log('Database connected ...'))
         .catch( err => console.log(err));
 
 //Use routes
 app.use('/api/items',items);
+app.use('/api/users', users);
 
 // Serve static assets if in production
 if(process.env.NODE_ENV === 'production'){
