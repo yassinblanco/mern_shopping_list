@@ -8,11 +8,13 @@ import {
 	FormGroup,
 	Label,
 	Input,
-	NavLink
+	NavLink,
+	Alert
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { register } from "../../actions/authActions";
+import { clearErrors } from "../../actions/errorActions";
 
 class RegisterModal extends Component {
 	state = {
@@ -26,10 +28,31 @@ class RegisterModal extends Component {
 	static propTypes = {
 		isAuthenticated: PropTypes.bool,
 		error: PropTypes.object.isRequired,
-		register: PropTypes.func.isRequired
+		register: PropTypes.func.isRequired,
+		clearErrors: PropTypes.func.isRequired
 	};
 
+	componentDidUpdate(prevProps) {
+		const { error, isAuthenticated } = this.props;
+		if (error !== prevProps.error) {
+			// Check for register error
+			if (error.id === "REGISTER_FAIL") {
+				this.setState({ msg: error.msg.msg });
+			} else {
+				this.setState({ msg: null });
+			}
+		}
+
+		// If authenticated, close modal
+		if (this.state.isOpen) {
+			if (isAuthenticated) {
+				this.toggle();
+			}
+		}
+	}
+
 	toggle = () => {
+		this.props.clearErrors();
 		this.setState({ isOpen: !this.state.isOpen });
 	};
 
@@ -54,7 +77,7 @@ class RegisterModal extends Component {
 			password
 		};
 		this.props.register(newUser);
-		this.toggle();
+		//this.toggle();
 	};
 
 	render() {
@@ -66,6 +89,9 @@ class RegisterModal extends Component {
 				<Modal isOpen={this.state.isOpen} toggle={this.toggle}>
 					<ModalHeader toggle={this.toggle}>Register User</ModalHeader>
 					<ModalBody>
+						{this.state.msg ? (
+							<Alert color="danger">{this.state.msg}</Alert>
+						) : null}
 						<Form onSubmit={this.onSubmit}>
 							<FormGroup>
 								<Label for="username">User Name</Label>
@@ -80,7 +106,7 @@ class RegisterModal extends Component {
 							<FormGroup>
 								<Label for="email">Email :</Label>
 								<Input
-									type="text"
+									type="email"
 									id="email"
 									name="email"
 									value={this.state.email}
@@ -90,7 +116,7 @@ class RegisterModal extends Component {
 							<FormGroup>
 								<Label for="password">Password :</Label>
 								<Input
-									type="text"
+									type="password"
 									id="password"
 									name="password"
 									value={this.state.password}
@@ -115,5 +141,5 @@ const mapStateToProps = state => ({
 
 export default connect(
 	mapStateToProps,
-	{ register }
+	{ register, clearErrors }
 )(RegisterModal);

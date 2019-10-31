@@ -80,3 +80,9 @@ export const register = ({ name, email, password }) => dispatch => {
 			});
 		});
 };
+
+export const logout = () => {
+	return {
+		type: LOGOUT_SUCCESS
+	};
+};
