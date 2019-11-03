@@ -52,7 +52,12 @@ class LoginModal extends Component {
 
 	toggle = () => {
 		this.props.clearErrors();
-		this.setState({ isOpen: !this.state.isOpen });
+		this.setState({
+			isOpen: !this.state.isOpen,
+			email: "",
+			password: "",
+			msg: null
+		});
 	};
 
 	onChangeEmail = e => {
